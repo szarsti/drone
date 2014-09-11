@@ -3,12 +3,15 @@ package deploy
 import (
 	"fmt"
 	"github.com/drone/drone/pkg/build/buildfile"
+	"github.com/drone/drone/pkg/plugin/condition"
 )
 
 type Tsuru struct {
 	Force  bool   `yaml:"force,omitempty"`
 	Branch string `yaml:"branch,omitempty"`
 	Remote string `yaml:"remote,omitempty"`
+
+	Condition *condition.Condition `yaml:"when,omitempty"`
 }
 
 func (h *Tsuru) Write(f *buildfile.Buildfile) {
@@ -35,4 +38,8 @@ func (h *Tsuru) Write(f *buildfile.Buildfile) {
 		// otherwise we just do a standard git push
 		f.WriteCmd(fmt.Sprintf("git push tsuru $COMMIT:master"))
 	}
+}
+
+func (h *Tsuru) GetCondition() *condition.Condition {
+	return h.Condition
 }
