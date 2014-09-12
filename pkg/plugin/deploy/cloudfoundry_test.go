@@ -5,6 +5,7 @@ import (
     "testing"
 
     "github.com/drone/drone/pkg/build/buildfile"
+	"github.com/drone/drone/pkg/build/repo"
 
     "launchpad.net/goyaml"
 )
@@ -57,7 +58,7 @@ func setUpWithCF(input string) (string, error) {
         return "", err
     }
     bf := buildfile.New()
-    buildStruct.Deploy.Write(bf)
+    buildStruct.Deploy.Write(bf, &repo.Repo{Name: "name"})
     return bf.String(), err
 }
 

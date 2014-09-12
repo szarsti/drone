@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/drone/drone/pkg/build/buildfile"
+	"github.com/drone/drone/pkg/plugin/condition"
 )
 
 // SSH struct holds configuration data for deployment
@@ -41,6 +42,8 @@ type SSH struct {
 	// Cmd is a single command executed at target host after the artifacts
 	// is deployed.
 	Cmd string `yaml:"cmd,omitempty"`
+
+	Condition *condition.Condition `yaml:"when,omitempty"`
 }
 
 // Write down the buildfile
@@ -95,4 +98,8 @@ func compress(f *buildfile.Buildfile, files []string) bool {
 	f.WriteEnv("ARTIFACT", "${PWD##*/}.tar.gz")
 	f.WriteCmdSilent(fmt.Sprintf(cmd, strings.Join(files, " ")))
 	return true
+}
+
+func (s *SSH) GetCondition() *condition.Condition {
+	return s.Condition
 }
